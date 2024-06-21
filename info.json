@@ -1,0 +1,36 @@
+{
+    "first_names": [
+        "Juan", "Maria", "Carlos", "Ana", "Luis", "Marta", "Jorge", "Laura",
+        "Pedro", "Sofia", "Andres", "Valentina", "Miguel", "Camila", "Fernando",
+        "Gabriela", "Jose", "Isabella", "Javier", "Daniela", "Ricardo", "Catalina",
+        "Roberto", "Manuela", "Alejandro", "Luisa", "Santiago", "Diana",
+        "Felipe", "Paula", "Enrique", "Natalia", "Martin", "Adriana", "Oscar",
+        "Claudia", "Raul", "Patricia", "Ramiro", "Lorena"
+    ],
+    "last_names": [
+        "Garcia", "Rodriguez", "Martinez", "Lopez", "Gonzalez", "Perez", "Hernandez",
+        "Gomez", "Diaz", "Moreno", "Rincon", "Alvarez", "Romero", "Gutierrez",
+        "Rojas", "Ramirez", "Sanchez", "Torres", "Vargas", "Castro", "Ortiz",
+        "Rubio", "Mendoza", "Reyes", "Cruz", "Jimenez", "Molina", "Velez",
+        "Pacheco", "Navarro", "Porras", "Suarez", "Cabrera", "Ramos", "Reina",
+        "Rios", "Herrera", "Guarin", "Ortega", "Medina"
+    ],
+    "cities": [
+        "Bogota", "Medellin", "Cali", "Barranquilla", "Cartagena", "Cucuta", 
+        "Bucaramanga", "Pereira", "Manizales", "Santa Marta", "Ibague", 
+        "Villavicencio", "Monteria", "Pasto", "Neiva", "Armenia", "Popayan", 
+        "Valledupar", "Buenaventura", "Sincelejo", "Riohacha", "Tunja", 
+        "Florencia", "Quibdo", "San Andres", "Mocoa", "Arauca", "Inirida", 
+        "Leticia", "Salento"
+    ],
+    "jobs": [
+        "Ingeniero", "Doctor", "Profesor", "Enfermera", "Artista", "Chef", "Programador",
+        "Escritor", "Contador", "Arquitecto", "Farmaceutico", "Abogado", "Dentista",
+        "Veterinario", "Periodista", "Fotografo", "Piloto", "Cientifico",
+        "Psicologo", "Bibliotecario", "Bombero", "Policia", "Mecanico",
+        "Fontanero", "Electricista", "Carpintero", "Granjero", "Pescador", "Barman",
+        "Cajero", "Recepcionista", "Tecnico", "Consultor", "Terapeuta",
+        "Diseñador", "Agente inmobiliario", "Entrenador fisico", "Trabajador social",
+        "Desarrollador de software", "Odontologo"
+    ]
+}
