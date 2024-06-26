@@ -87,6 +87,3 @@ nx.draw_networkx(G, pos = pos, with_labels=False,
                  node_size=15, width=0.3, node_color='blue', edge_color='grey')
 plt.axis('off')
 plt.show()
-
-for vertex in network._vertices:
-    print(vertex.first_name)
