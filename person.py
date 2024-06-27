@@ -16,11 +16,10 @@ class Person():
                        str(data["cities"].index(self.city)),
                        str(data["jobs"].index(self.job))])
             
-    def show_atributes(self) -> dict:
-        return {"first_name": self.first_name,
+    def show_attributes(self):
+        print({"first_name": self.first_name,
                 "last_name": self.last_name,
                 "age": self.age,
                 "city": self.city,
                 "job": self.job,
-                "id": self.id}
-
+                "id": self.id})
