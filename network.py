@@ -1,11 +1,8 @@
 from edge import Edge
-from person import Person
 from itertools import combinations
-from typing import TypeVar, Generic, List, Optional
+from typing import TypeVar, Generic, List
 import math 
 import random
-import networkx as nx
-import matplotlib.pyplot as plt
 
 V = TypeVar('V')
 E = TypeVar('E')
@@ -65,25 +62,3 @@ class Network(Generic[V]):
         for i in range(self.vertex_count):
             desc += f"{self.vertex_at(i)} -> {self.neighbors_for_index(i)}\n"
         return desc
-
-vertex = [Person() for _ in range(100)]
-network = Network([])
-network.add_vertices(vertex)
-network.generate_edges(0.04)
-
-G = nx.Graph()
-
-for edge in network._edges:
-    for i in range(len(edge)):
-        if edge:
-            u = edge[i].u
-            v = edge[i].v
-            G.add_edge(u,v)
-
-pos = nx.spring_layout(G) # get the position using the spring layout algorithm
-
-plt.rcParams['figure.figsize'] = [10, 10]
-nx.draw_networkx(G, pos = pos, with_labels=False, 
-                 node_size=15, width=0.3, node_color='blue', edge_color='grey')
-plt.axis('off')
-plt.show()
