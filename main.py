@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from search_algs import dfs
 from typing import Literal, TypeVar
+import time
 
 T = TypeVar('T')
 
@@ -17,21 +18,13 @@ def create_random_network(n: int = 50, t: float=0.5) -> Network:
     return network
 
 def plot_network(network: Network) -> None:
-    G = nx.Graph()
 
-    for edge in network._edges:
-        for i in range(len(edge)):
-            if edge:
-                u = edge[i].u
-                v = edge[i].v
-                G.add_edge(u,v)
-
-    pos = nx.spring_layout(G) # get the position using the spring layout algorithm
+    G, pos = network.network_to_nxgraph()
 
     plt.rcParams['figure.figsize'] = [10, 10]
     nx.draw_networkx(G, pos = pos, with_labels=False, 
                     node_size=15, width=0.3, node_color='blue', edge_color='grey')
-    plt.axis
+    plt.axis('off')
     plt.show()
 
 def search_for(network: Network, start: T, key: str, value: str, alg: Literal['dfs', 'bfs'] = dfs):
@@ -41,18 +34,42 @@ def search_for(network: Network, start: T, key: str, value: str, alg: Literal['d
         #Define goal_test to pass to search alg
         return getattr(current, str(key)) == str(value)
     
-    return alg(start, goal_test, network.neighbors_for_vertex)
+    node = alg(start, goal_test, network.neighbors_for_vertex)[0]
 
-def run():
+    order = (network.index_of(vertex) for vertex in alg(start, goal_test, network.neighbors_for_vertex)[1]) #make order based on nodes index
+    return (node, order)
+
+def visualize_search(order, G, pos):
+    plt.figure()
+
+    node_color = ['b' for _ in range(len(G.nodes))]
+    for i, node in enumerate(order, start=0):
+        plt.clf()
+
+        ind = list(G.nodes).index(node)
+        node_color[ind] = 'r'
+
+        nx.draw(G, pos, with_labels = False, node_color = node_color, node_size = 15, width=0.3, edge_color = 'gray')
+        plt.draw()
+        plt.pause(0.5)
+    plt.show()
+    time.sleep(0.5)
+
+def run(plot = True, animate = False):
     network = create_random_network()
-    plot_network(network)
-    satisfied = search_for(network, network._vertices[5], "city", "Bogota")
-
+    satisfied, order = search_for(network, network._vertices[5], "city", "Bogota")
     if satisfied:
         print("Found one person that meets criteria:")
         satisfied.show_attributes()
     else:
         print("There isn't any related person that meets the criteria")
+        
+    G, pos = network.network_to_nxgraph()
 
-run()
+    if plot:
+        plot_network(network)
+    if animate:
+        visualize_search(order, G, pos)
 
+
+run(plot=True, animate=True)
