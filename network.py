@@ -3,6 +3,7 @@ from itertools import combinations
 from typing import TypeVar, Generic, List
 import math 
 import random
+import networkx as nx
 
 V = TypeVar('V')
 E = TypeVar('E')
@@ -40,14 +41,44 @@ class Network(Generic[V]):
     def generate_edges(self, thickness:float) -> None:
         """Generate edges between vertices based on thickness parameter: 
         thickness = 0 -> 0 edges
-        thickness = 1 -> full 2-length combinations between vertices"""
+        thickness = 1 -> all 2-length combinations between vertices"""
 
-        n = int(thickness * math.comb(self.vertex_count, 2))
-        comb = list(combinations(self._vertices, 2))
-        random.shuffle(comb)
+        n = self.vertex_count
+        spanning_tree_edges = n - 1
+        complete_graph_edges = math.comb(n, 2)
 
-        for element in comb[:n]: #Take the first n elements of the list
-            u, v = [self.index_of(element[i]) for i in [0,1]]
+        num_edges = int(spanning_tree_edges + thickness * (complete_graph_edges - spanning_tree_edges))
+
+        #Generate spanning tree to avoid disconnected graphs
+        remaining_vertices= set(self._vertices)
+        current_vertex = remaining_vertices.pop()
+        tree_edges = []
+
+        while remaining_vertices:
+            next_vertex = remaining_vertices.pop()
+            tree_edges.append((current_vertex, next_vertex))
+            current_vertex = next_vertex
+
+        for u, v in tree_edges:
+            u = self.index_of(u)
+            v = self.index_of(v)
+            edge = Edge(u,v)
+            self.add_edge(edge)
+
+        #Add 2-lenght combinations between all vertices and shuffle to pick randomly
+        remaining_edges = list(combinations(self._vertices, 2))
+        random.shuffle(remaining_edges)
+
+        #Remove tree edges from combinations to avoid repetition
+        for u,v in remaining_edges: 
+            if (u, v) in tree_edges or (v,u) in tree_edges:
+                remaining_edges.remove((u,v))
+
+        #Add remaining number of edges
+        additional_edges = num_edges - len(tree_edges)
+        for u,v in remaining_edges[:additional_edges]:
+            u = self.index_of(u)
+            v = self.index_of(v)
             edge = Edge(u,v)
             self.add_edge(edge)
 
@@ -56,6 +87,20 @@ class Network(Generic[V]):
     
     def neighbors_for_vertex(self, vertex: V) -> List[V]:
         return self.neighbors_for_index(self.index_of(vertex))
+    
+    def network_to_nxgraph(self):
+        """Turn network into Nx graph to plot and visualize"""
+        G = nx.Graph()
+        for edge in self._edges:
+            for i in range(len(edge)):
+                if edge:
+                    u = edge[i].u
+                    v = edge[i].v
+                    G.add_edge(u,v)
+
+        pos = nx.spring_layout(G)  # get the position using the spring layout algorithm
+
+        return G, pos
 
     def __str__(self) -> str:
         desc: str = ""
