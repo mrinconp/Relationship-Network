@@ -2,7 +2,7 @@ from network import Network
 from person import Person
 import networkx as nx
 import matplotlib.pyplot as plt
-from search_algs import dfs
+from search_algs import dfs, bfs
 from typing import Literal, TypeVar
 import time
 
@@ -19,7 +19,8 @@ def create_random_network(n: int = 50, t: float=0.5) -> Network:
 
 def plot_network(network: Network) -> None:
 
-    G, pos = network.network_to_nxgraph()
+    G = network.network_to_nxgraph()
+    pos = nx.spring_layout(G)  # get the position using the spring layout algorithm
 
     plt.rcParams['figure.figsize'] = [10, 10]
     nx.draw_networkx(G, pos = pos, with_labels=False, 
@@ -36,7 +37,7 @@ def search_for(network: Network, start: T, key: str, value: str, alg: Literal['d
     
     node = alg(start, goal_test, network.neighbors_for_vertex)[0]
 
-    order = (network.index_of(vertex) for vertex in alg(start, goal_test, network.neighbors_for_vertex)[1]) #make order based on nodes index
+    order = list(network.index_of(vertex) for vertex in alg(start, goal_test, network.neighbors_for_vertex)[1]) #make order based on nodes index
     return (node, order)
 
 def visualize_search(order, G, pos):
@@ -55,21 +56,38 @@ def visualize_search(order, G, pos):
     plt.show()
     time.sleep(0.5)
 
-def run(plot = True, animate = False):
-    network = create_random_network()
-    satisfied, order = search_for(network, network._vertices[5], "city", "Bogota")
-    if satisfied:
-        print("Found one person that meets criteria:")
-        satisfied.show_attributes()
-    else:
-        print("There isn't any related person that meets the criteria")
-        
-    G, pos = network.network_to_nxgraph()
+def run(graph_type: Literal['network', 'tree'] = 'network', plot = True, animate = False):
+    if graph_type == 'network':
 
-    if plot:
-        plot_network(network)
+        network = create_random_network()
+        satisfied = search_for(network, network._vertices[5], "city", "Bogota", dfs)[0] #node that meets criteria
+
+        order1 = search_for(network, network._vertices[5], "city", "Bogota", dfs)[1] #LIFO
+        order2 = search_for(network, network._vertices[5], "city", "Bogota", bfs)[1] #FIFO
+
+        if satisfied:
+            print("Found one person that meets criteria:")
+            satisfied.show_attributes()
+        else:
+            print("There isn't any related person that meets the criteria")
+            
+        G = network.network_to_nxgraph()
+        pos = nx.spring_layout(G) 
+
+        if plot:
+            plot_network(network)
+
+    elif graph_type == 'tree':
+        G = nx.random_tree(20)
+        pos = nx.spring_layout(G) 
+        order1 = dfs(1,None, successors= G.neighbors)[1]
+        order2 = bfs(1,None, successors= G.neighbors)[1]
+
     if animate:
-        visualize_search(order, G, pos)
+        visualize_search(order1, G, pos)
+        print(f"Algoritmo DFS. Número de iteraciones: {len(order1)}")
+        visualize_search(order2, G, pos)
+        print(f"Algoritmo BFS. Número de iteraciones: {len(order2)}")
 
 
-run(plot=True, animate=True)
+run(graph_type='network', plot=True, animate=True)

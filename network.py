@@ -98,9 +98,7 @@ class Network(Generic[V]):
                     v = edge[i].v
                     G.add_edge(u,v)
 
-        pos = nx.spring_layout(G)  # get the position using the spring layout algorithm
-
-        return G, pos
+        return G
 
     def __str__(self) -> str:
         desc: str = ""
